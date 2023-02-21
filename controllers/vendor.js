@@ -10,7 +10,28 @@ let isAuthenticated = require('../services/authenticationService').isAuthenticat
 
 router.get('/:vendor_id',isAuthenticated, getVendor );
 router.post('/', isAuthenticated,createVendor );
+router.get('/', isAuthenticated, allVendors );
 
+function allVendors(req, res, next) {
+    return new Promise((resolve, reject) => {
+        vendorService.allVendors().then(data => {
+            res.status(HttpStatus.StatusCodes.OK);
+            res.send({
+                errMessage: null,
+                error: false,
+                data : data
+            });
+        }).catch(err => {
+            console.log(err);
+            res.status(HttpStatus.StatusCodes.INTERNAL_SERVER_ERROR);
+            res.send({
+                errMessage: null,
+                error: true,
+                data : err
+            });
+        })
+    })
+}
 
 function getVendor( req, res, next ) {
     return new Promise((resolve,reject) => {
@@ -23,7 +44,7 @@ function getVendor( req, res, next ) {
                     errMessage: null,
                     error: false,
                     data : val
-                });     
+                });
             }
             else
             {
@@ -32,7 +53,7 @@ function getVendor( req, res, next ) {
                     errMessage: 'no records found',
                     error: false,
                     data : {}
-                });   
+                });
             }
         }).catch(err => {
             logger.error(err);
@@ -47,17 +68,17 @@ function getVendor( req, res, next ) {
 }
 
 function createVendor (req, res, next) {
-    
+
     return new Promise((resolve,reject) => {
         console.log(req.body);
         let rules =  {
-            email:'required', 
+            email:'required',
             name:'required',
             address : 'required',
          };
-         
+
         let validation = new Validator(req.body, rules);
-        
+
         validation.check().then(function (matched) {
             if( ! matched){
                 return res.status(HttpStatus.StatusCodes.BAD_REQUEST).send({
@@ -74,7 +95,7 @@ function createVendor (req, res, next) {
                     error: false,
                     data : val
                 });
-                
+
             }).catch(err => {
                 logger.error(err);
                 res.status(HttpStatus.StatusCodes.INTERNAL_SERVER_ERROR);

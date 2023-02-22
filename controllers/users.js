@@ -22,14 +22,14 @@ function userView() {
 function loginUser( req, res, next ) {
     return new Promise((resolve,reject) => {
         console.log('point 1 in login function');
-        
+
         let rules =  {
-            email:'required', 
+            email:'required',
             password:'required',
          };
-         
+
         let validation = new Validator(req.body, rules);
-        
+
         validation.check().then(function (matched) {
             if( ! matched){
                 return res.status(HttpStatus.StatusCodes.BAD_REQUEST).send({
@@ -46,10 +46,10 @@ function loginUser( req, res, next ) {
                     error: false,
                     data : val
                 });
-                
+
             }).catch(err => {
                 logger.error(err);
-                res.status(HttpStatus.StatusCodes.INTERNAL_SERVER_ERROR);
+                res.status(HttpStatus.StatusCodes.UNPROCESSABLE_ENTITY);
                     res.send({
                         errMessage: err,
                         error: true,
@@ -62,16 +62,16 @@ function loginUser( req, res, next ) {
 }
 
 function registerUser (req, res, next) {
-    
+
     return new Promise((resolve,reject) => {
         console.log(req.body);
         let rules =  {
-            email:'required', 
+            email:'required',
             password:'required',
          };
-         
+
         let validation = new Validator(req.body, rules);
-        
+
         validation.check().then(function (matched) {
             if( ! matched){
                 return res.status(HttpStatus.StatusCodes.BAD_REQUEST).send({
@@ -88,7 +88,7 @@ function registerUser (req, res, next) {
                     error: false,
                     data : val
                 });
-                
+
             }).catch(err => {
                 logger.error(err);
                 res.status(HttpStatus.StatusCodes.INTERNAL_SERVER_ERROR);
@@ -104,16 +104,16 @@ function registerUser (req, res, next) {
 };
 
 function resetPassword (req, res, next) {
-    
+
     return new Promise((resolve,reject) => {
-        
+
         let rules =  {
             password:'required',
             newPassword:'required',
          };
-         
+
         let validation = new Validator(req.body, rules);
-        
+
         validation.check().then(function (matched) {
             if( ! matched){
                 return res.status(HttpStatus.StatusCodes.BAD_REQUEST).send({
@@ -124,7 +124,7 @@ function resetPassword (req, res, next) {
             }
 
             req.body.userId = req.params.user_id;
-            
+
             UserService.resetPassword(req.body).then(val => {
                 res.status(HttpStatus.StatusCodes.OK);
                 res.send({
@@ -132,7 +132,7 @@ function resetPassword (req, res, next) {
                     error: false,
                     data : val
                 });
-                
+
             }).catch(err => {
                 logger.error(err);
                 res.status(HttpStatus.StatusCodes.INTERNAL_SERVER_ERROR);
@@ -157,7 +157,7 @@ function getUserProfile (req, res, next) {
                 errMessage: null,
                 error: false,
                 data : val
-            });     
+            });
         }
         else
         {
@@ -166,7 +166,7 @@ function getUserProfile (req, res, next) {
                 errMessage: 'no records found',
                 error: false,
                 data : {}
-            });   
+            });
         }
     }).catch(err => {
         logger.error(err);

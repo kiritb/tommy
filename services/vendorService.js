@@ -5,7 +5,7 @@ let logger = console;
 let createVendor = (vendorObj) => {
     return new Promise((resolve, reject) => {
         vendor.create( {
-            email : vendorObj.email, 
+            email : vendorObj.email,
             name:vendorObj.name,
             address : vendorObj.address,
             status : 1,
@@ -18,19 +18,24 @@ let createVendor = (vendorObj) => {
         }).catch(err => {
             reject(err);
         })
-    }); 
+    });
 };
 
-let getVendor = (vendorId) => {    
+let allVendors = () => {
+    return vendor.findAll();
+}
+
+let getVendor = (vendorId) => {
     let vendorData = vendor.findOne({ where: { id: vendorId } });
     if(vendorData) {
         return vendorData;
     }else{
         return []
-    } 
+    }
 }
 
 module.exports = {
     createVendor,
-    getVendor
+    getVendor,
+    allVendors
 }
